@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_flutter/widgets/empty_state.dart';
+import 'widgets/empty_state.dart';
 
 void main(){
   runApp(const MaterialApp(
