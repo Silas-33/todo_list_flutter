@@ -19,7 +19,7 @@ class _TodoAppStorage extends State<TodoApp>{
 
   bool _isLoading = true;
   bool _isLoggedIn = false;
-  bool darkMode = false;
+  bool _darkMode = false;
 
   @override
   void initState(){
@@ -29,7 +29,7 @@ class _TodoAppStorage extends State<TodoApp>{
 
   Future<void> _loadAppState() async{
     await _appStorage.ensureDefaultUser();
-    final _isLoggedIn = await _appStorage.loadIsLoggedIn();
+    final isLoggedIn = await _appStorage.loadIsLoggedIn();
     final settings = await _appStorage.loadSettings();
 
     setState(() {
@@ -59,6 +59,41 @@ class _TodoAppStorage extends State<TodoApp>{
 
   @override
   Widget build(BuildContext context){
-    
+    const seedColor = Color(0xFF1565C8);
+
+    return MaterialApp(
+      title: 'Minhas tarefas',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: seedColor
+        ),
+        appBarTheme: const AppBarTheme(
+          centerTitle: false,
+        ),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: seedColor,
+          brightness: Brightness.dark,
+        ),
+        appBarTheme: const AppBarTheme(
+          centerTitle: false,
+        ),
+      ),
+      themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
+      home: _isLoading
+          ?const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          )
+          : _isLoggedIn
+            ? HomePage(
+              onLogout: _handleLogout,
+              onThemeChanged: _handleThemeChanged
+            )
+          : LoginPage(onLogin: _handleLogin)
+    );
   }
 }
